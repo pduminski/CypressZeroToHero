@@ -9,8 +9,7 @@ beforeEach('Open test application', () => {
 })
 
 describe('Locators', () => {
-    it('Find elements', () => {
-
+    it('Find elements by locator', () => {
         // by Tag
         cy.get('input')
 
@@ -36,5 +35,27 @@ describe('Locators', () => {
 
         // find by data-cy aatribute 
         cy.get('[data-cy="inputEmail1"]')
+    })
+
+    it.only('Cypress Locator Methods', () => {
+        // Theory 
+        // get() - to find elements on the page globally
+        // find() - to find only child elements
+
+        // contains() - to find web elements by test 
+        // method is case sensitive (check in dom what text is there)
+        cy.contains('Sign In', { matchCase: false })
+        cy.contains('Sign', { matchCase: false })
+        cy.contains('Emai', { matchCase: false })
+
+        // Buttons have different colors, so we can differentiate them
+        cy.contains('[status="warning"]', 'Sign in')
+
+        // Try to find entire form where Sign In button is located
+        cy.contains('nb-card', 'Horizontal form').find('button');
+        cy.contains('nb-card', 'Horizontal form').contains('Sign in');
+
+
+        // NEXT LESSON CHILD ELEMENTS
     })
 })
