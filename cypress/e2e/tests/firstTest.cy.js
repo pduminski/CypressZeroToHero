@@ -37,7 +37,7 @@ describe('Locators', () => {
         cy.get('[data-cy="inputEmail1"]')
     })
 
-    it.only('Cypress Locator Methods', () => {
+    it('Cypress Locator Methods', () => {
         // Theory 
         // get() - to find elements on the page globally
         // find() - to find only child elements
@@ -57,5 +57,50 @@ describe('Locators', () => {
 
 
         // NEXT LESSON CHILD ELEMENTS
+    })
+
+    it('Child Elements', () => {
+        // In cypress you can chain endless amount of .find elements
+        cy.contains('nb-card', 'Using the Grid').find('.row').find('button');
+
+        cy.get('nb-card').find('nb-radio-group').find('nb-radio').contains('Option 1');
+
+        // find this element and child element inside cy.get()
+        cy.get('nb-card nb-radio-group').contains('Option 1');
+
+        // Use > if you want to find element that is exactly under specific element
+        cy.get('nb-card > nb-card-body [placeholder="Email"]')
+        cy.get('nb-card > nb-card-body').find('[placeholder="Email"]')
+
+        // When building selectors try to get them as short as possible 
+    })
+
+    it('Parent Elements', () => {
+        cy.get('#inputEmail1').parents('form').find('button');
+
+        // Move 1 step up
+        cy.contains('Using the Grid').parent().find('button');
+        // the same would be that one 
+        cy.contains('nb-card', 'Using the Grid').find('button');
+
+        // This will fail because it stops until form
+        // cy.get('#inputEmail1').parentsUntil('form').find('button');
+        cy.get('#inputEmail1').parentsUntil('nb-card-body').find('button');
+    })
+
+    it.only('Cypress Chains', () => {
+        // It is not really recommended to continue chain after action command
+        // Because Click may change the DOM 
+        cy.get("#inputEmail1")
+            .parents('form')
+            .find('button')
+            .click()
+
+        // create new chain
+        cy.get("#inputEmail1")
+            .parents('form')
+            .find('nb-radio')
+            .first()
+            .should('have.text', 'Option 1');
     })
 })
