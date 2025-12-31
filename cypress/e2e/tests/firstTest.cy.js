@@ -70,7 +70,7 @@ describe('Locators', () => {
 
         // Use > if you want to find element that is exactly under specific element
         cy.get('nb-card > nb-card-body [placeholder="Email"]')
-        cy.get('nb-card > nb-card-body').find('[placeholder="Email"]')
+        cy.get('nb-card git> nb-card-body').find('[placeholder="Email"]')
 
         // When building selectors try to get them as short as possible 
     })
