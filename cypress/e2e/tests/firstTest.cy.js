@@ -88,7 +88,7 @@ describe('Locators', () => {
         cy.get('#inputEmail1').parentsUntil('nb-card-body').find('button');
     })
 
-    it.only('Cypress Chains', () => {
+    it('Cypress Chains', () => {
         // It is not really recommended to continue chain after action command
         // Because Click may change the DOM 
         cy.get("#inputEmail1")
@@ -102,5 +102,41 @@ describe('Locators', () => {
             .find('nb-radio')
             .first()
             .should('have.text', 'Option 1');
+    })
+
+    it('Reusing Locators', () => {
+        // 1. Cypress Aliases
+        // This variable becomes global for your test run 
+        cy.get("#inputEmail1").as('emailInput');
+        cy.get('@emailInput').parents('form').find('button');
+        cy.get('@emailInput').parents('form').find('nb-radio');
+
+        // 2. Cypress then() method
+        cy.get("#inputEmail1").then(inputEmail => {
+            // this will not work, here we use jquery 
+            // inputEmail becomes pure jquery object
+            // inputEmail.parents('form').find('button');
+
+            // convery jquery object into Cypress chainable object
+            cy.wrap(inputEmail).parents('form').find('button');
+            cy.wrap(inputEmail).parents('form').find('nb-radio');
+
+            // cy.wrap can be used to any type of data on which
+            // we want to use cypress chainable 
+            cy.wrap('Hello').should('equal', 'Hello');
+            cy.wrap(inputEmail).as('inputEmail2');
+
+
+            // We cannot return anything from then using return keyword
+            // If you want to remove anything from then() use alias
+        })
+
+        cy.get('@inputEmail2').click();
+    })
+
+    it.only('Extracting Values', () => {
+        // 1. using a JQuery method
+        cy.get('#exampleInputEmail1');
+
     })
 })
