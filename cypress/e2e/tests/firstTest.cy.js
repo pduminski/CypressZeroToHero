@@ -134,9 +134,62 @@ describe('Locators', () => {
         cy.get('@inputEmail2').click();
     })
 
-    it.only('Extracting Values', () => {
+    it('Extracting Values', () => {
         // 1. using a JQuery method
-        cy.get('#exampleInputEmail1');
+        cy.get('[for="exampleInputEmail1"]').then(label => {
+            const emailLabel = label.text();
+            cy.log(emailLabel);
+        });
+
+        // 2. using Cypress .invoke() method
+        cy.get('[for="exampleInputEmail1"]').invoke('text').then(emailLabel => {
+            cy.log(emailLabel);
+        })
+
+        cy.get('[for="exampleInputEmail1"]').invoke('text').as('emailLabelText');
+
+        // 3. Invoke attribute value 
+        cy.get('#exampleInputEmail1').invoke('attr', 'placeholder').then(placeholder => {
+            cy.log(placeholder);
+            expect(placeholder).to.equal('Email');
+        })
+
+        cy.get('#exampleInputEmail1').invoke('attr', 'class').then(classValue => {
+            cy.log(classValue);
+        })
+
+        cy.get('#exampleInputEmail1').should('include.attr', 'class', 'input-full-width size-medium status-basic shape-rectangle nb-transition');
+
+
+
+        // 4. Invoke input field value
+        cy.get('#exampleInputEmail1').type('hello@test.com');
+        cy.get('#exampleInputEmail1').invoke('prop', 'value').then(inputValue => {
+            cy.log(inputValue);
+        })
+    })
+
+    it.only('Assertions', () => {
+
+        // 1 
+        cy.get('[for="exampleInputEmail1"]').should('contain', 'Email address');
+        cy.get('[for="exampleInputEmail1"]').should('have.text', 'Email address');
+
+        // 2
+        cy.get('[for="exampleInputEmail1"]').then(label => {
+            const emailLabel = label.text();
+            cy.log(emailLabel);
+
+            expect(label).to.contain('Email address');
+        });
+
+        // 3 
+        cy.get('[for="exampleInputEmail1"]').invoke('text').then(emailLabel => {
+            cy.log(emailLabel);
+            expect(emailLabel).to.equal('Email address');
+        })
+
+        // How it retries 
 
     })
 })
