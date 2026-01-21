@@ -169,7 +169,7 @@ describe('Locators', () => {
         })
     })
 
-    it.only('Assertions', () => {
+    it('Assertions', () => {
 
         // 1 
         cy.get('[for="exampleInputEmail1"]').should('contain', 'Email address');
@@ -191,5 +191,14 @@ describe('Locators', () => {
 
         // How it retries 
 
+    })
+
+    it.only('Timeouts', () => {
+        cy.contains("Modal & Overlays").click();
+        cy.contains('Dialog').click();
+
+        cy.contains('Open with delay 10 seconds').click();
+        // remember to not add timeout into assertion
+        cy.get('nb-dialog-container nb-card-header', { timeout: 11000 }).should('have.text', 'Friendly reminder');
     })
 })
