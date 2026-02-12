@@ -57,5 +57,30 @@ it('Checkboxes', () => {
     // just use check uncheck functions 
     cy.get("[type='checkbox']").click({ force: true, multiple: true });
     cy.get("[type='checkbox']").should("be.checked");
+})
 
+it.only("Lists and dropdowns", () => {
+    cy.contains('Modal & Overlays').click();
+    cy.contains("Toastr").click();
+
+    // If there is standard select: 
+    cy.contains('div', 'Toast type:').find('select').select('warning')
+        .should('have.value', 'warning');
+
+    // For custom dropdowns:
+    cy.contains('div', 'Position:').find('nb-select').click();
+    cy.get('.option-list').contains('bottom-right').click()
+    cy.contains('div', 'Position:').find('nb-select')
+        .should('have.text', 'bottom-right');
+
+    // Playing around loops and dropdowns
+    cy.contains('div', 'Position:').find('nb-select').then(dropdown => {
+        cy.wrap(dropdown).click()
+        cy.get('.option-list nb-option').each((option, index, list) => {
+            cy.wrap(option).click()
+            if (index < list.length - 1)
+                cy.wrap(dropdown).click()
+        })
+
+    })
 })
