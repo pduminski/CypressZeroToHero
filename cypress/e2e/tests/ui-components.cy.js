@@ -29,7 +29,7 @@ it('Input fields and key presses', () => {
     // cy.press(Cypress.Keyboard.Keys.TAB)
 })
 
-it.only('Radio buttons', () => {
+it('Radio buttons', () => {
     cy.contains('Forms').click();
     cy.contains('Form Layouts').click();
 
@@ -41,6 +41,21 @@ it.only('Radio buttons', () => {
 
     cy.contains('nb-card', 'Using the Grid').contains('label', 'Option 1').click();
     cy.contains('nb-card', 'Using the Grid').contains('label', 'Option 2').find('input').check({ force: true });
+})
 
+it('Checkboxes', () => {
+    cy.contains('Modal & Overlays').click();
+    cy.contains("Toastr").click();
+
+    cy.get("[type='checkbox']").check({ force: true });
+    cy.get("[type='checkbox']").should("be.checked");
+
+    cy.get("[type='checkbox']").uncheck({ force: true });
+    cy.get("[type='checkbox']").should("be.not.checked");
+
+    // this will work and requires multiple: true but will do the job
+    // just use check uncheck functions 
+    cy.get("[type='checkbox']").click({ force: true, multiple: true });
+    cy.get("[type='checkbox']").should("be.checked");
 
 })
