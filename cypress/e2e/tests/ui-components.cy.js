@@ -17,7 +17,7 @@ it('Input Fields', () => {
     cy.get('#inputEmail1').should('have.value', name + '@test.com').clear().type('test@test.com');
 })
 
-it.only('Input fields and key presses', () => {
+it('Input fields and key presses', () => {
     cy.contains('Auth').click();
     cy.contains('Login').click();
 
@@ -27,4 +27,20 @@ it.only('Input fields and key presses', () => {
     // TAB is the only modifier that does not work 
     // cy.press will support that command 
     // cy.press(Cypress.Keyboard.Keys.TAB)
+})
+
+it.only('Radio buttons', () => {
+    cy.contains('Forms').click();
+    cy.contains('Form Layouts').click();
+
+    cy.contains('nb-card', 'Using the Grid').find('[type="radio"]').then(allRadioButtons => {
+        cy.wrap(allRadioButtons).eq(0).check({ force: true }).should('be.checked');
+        cy.wrap(allRadioButtons).eq(1).check({ force: true }).should('be.checked');
+        cy.wrap(allRadioButtons).eq(0).should('not.be.checked');
+    });
+
+    cy.contains('nb-card', 'Using the Grid').contains('label', 'Option 1').click();
+    cy.contains('nb-card', 'Using the Grid').contains('label', 'Option 2').find('input').check({ force: true });
+
+
 })
