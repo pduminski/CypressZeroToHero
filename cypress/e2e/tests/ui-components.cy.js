@@ -59,7 +59,7 @@ it('Checkboxes', () => {
     cy.get("[type='checkbox']").should("be.checked");
 })
 
-it.only("Lists and dropdowns", () => {
+it("Lists and dropdowns", () => {
     cy.contains('Modal & Overlays').click();
     cy.contains("Toastr").click();
 
@@ -83,4 +83,12 @@ it.only("Lists and dropdowns", () => {
         })
 
     })
+})
+
+it.only('Tooltips', () => {
+    cy.contains('Modal & Overlays').click();
+    cy.contains("Tooltip").click();
+
+    cy.contains('button', 'Top').trigger('mouseenter');
+    cy.get('nb-tooltip').should('have.text', 'This is a tooltip');
 })
