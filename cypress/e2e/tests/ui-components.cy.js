@@ -112,3 +112,16 @@ it('dialog boxes', () => {
     cy.get('.nb-trash').first().click();
     cy.get('@dialogBox').should('be.calledWith', 'Are you sure you want to delete?');
 })
+
+it.only('getting values in tables', () => {
+    cy.contains('Tables & Data').click()
+    cy.contains('Smart Table').click();
+
+    // 1. Update value on Larry Bird age, using unique value to catch row
+    cy.get('tbody').contains('tr', 'Larry').then(tableRow => {
+        cy.wrap(tableRow).find('.nb-edit').click();
+        cy.wrap(tableRow).find('[placeholder="Age"]').clear().type('36');
+        cy.wrap(tableRow).find('.nb-checkmark').click();
+        cy.wrap(tableRow).find('td').last().should('have.text', '36');
+    })
+})
