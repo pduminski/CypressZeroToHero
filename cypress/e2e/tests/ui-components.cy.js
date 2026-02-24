@@ -113,7 +113,7 @@ it('dialog boxes', () => {
     cy.get('@dialogBox').should('be.calledWith', 'Are you sure you want to delete?');
 })
 
-it.only('getting values in tables', () => {
+it('getting values in tables', () => {
     cy.contains('Tables & Data').click()
     cy.contains('Smart Table').click();
 
@@ -123,5 +123,20 @@ it.only('getting values in tables', () => {
         cy.wrap(tableRow).find('[placeholder="Age"]').clear().type('36');
         cy.wrap(tableRow).find('.nb-checkmark').click();
         cy.wrap(tableRow).find('td').last().should('have.text', '36');
+    })
+
+    // 2. How to find by index 
+    // Create new row and validate it
+    cy.get('.nb-plus').click();
+
+    cy.get('thead tr').eq(2).then(tableRow => {
+        cy.wrap(tableRow).find('[placeholder="First Name"]').type('John')
+        cy.wrap(tableRow).find('[placeholder="Last Name"]').type('Rambo')
+        cy.wrap(tableRow).find('.nb-checkmark').click();
+    })
+
+    cy.get('tbody tr').first().find('td').then(tableColumns => {
+        cy.wrap(tableColumns).eq(2).should('have.text', 'John');
+        cy.wrap(tableColumns).eq(3).should('have.text', 'Rambo');
     })
 })
