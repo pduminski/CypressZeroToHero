@@ -1,12 +1,15 @@
 /// <reference types="cypress" />
 
+import { navigateTo } from "../../page-objects/navigationPage";
+
 beforeEach('Open Application', () => {
     cy.visit('/')
 })
 
 it('Input Fields', () => {
-    cy.contains('Forms').click();
-    cy.contains('Form Layouts').click();
+    // cy.contains('Forms').click();
+    // cy.contains('Form Layouts').click();
+    navigateTo.formLayoutsPage();
 
     const name = 'TestUser';
     cy.get('#inputEmail1').type('test@test.com', { delay: 200 }).clear()
@@ -139,4 +142,71 @@ it('getting values in tables', () => {
         cy.wrap(tableColumns).eq(2).should('have.text', 'John');
         cy.wrap(tableColumns).eq(3).should('have.text', 'Rambo');
     })
+
+
+    // 3. Filtering tables
+    const ages = [20, 40, 50];
+
+    cy.wrap(ages).each(ageValue => {
+        cy.get('[placeholder="Age"]').clear().type(ageValue);
+        cy.wait(1000);
+        cy.get('tbody').find('tr').each(tableRow => {
+            if (ageValue === 50)
+                cy.wrap(tableRow).find('td').last().should('contain.text', 'No data found');
+            else
+                cy.wrap(tableRow).find('td').last().should('have.text', ageValue);
+        })
+    })
+
+})
+
+it('datepickers', () => {
+    cy.contains('Forms').click()
+    cy.contains('Datepicker').click()
+
+
+
+    function selectDateFromCurrentDay(day) {
+        let date = new Date()
+        date.setDate(date.getDate() + day)
+        let futureDay = date.getDate()
+        let futureMonthLong = date.toLocaleDateString('en-US', { month: 'long' })
+        let futureMonthShort = date.toLocaleDateString('en-US', { month: 'short' })
+        let futureYear = date.getFullYear()
+        let dateToAssert = `${futureMonthShort} ${futureDay}, ${futureYear}`
+
+        cy.get('nb-calendar-view-mode').invoke('text').then(calendarMonthAndYear => {
+            if (!calendarMonthAndYear.includes(futureMonthLong) || !calendarMonthAndYear.includes(futureYear)) {
+                cy.get('[data-name="chevron-right"]').click()
+                selectDateFromCurrentDay(day)
+            } else {
+                cy.get('.day-cell').not('.bounding-month').contains(futureDay).click()
+            }
+        })
+        return dateToAssert
+    }
+
+    cy.get('[placeholder="Form Picker"]').then(input => {
+        cy.wrap(input).click()
+        const dateToAssert = selectDateFromCurrentDay(20)
+        cy.wrap(input).should('have.value', dateToAssert)
+    })
+})
+
+it('Sliders', () => {
+    cy.get('[tabtitle="Temperature"]').find('circle')
+        .invoke('attr', 'cx', '119.50')
+        .invoke('attr', 'cy', '10.61')
+        .click();
+
+    cy.get('[class="value temperature h1"]').should('contain.text', '20')
+})
+
+it('drag and drop', () => {
+    cy.contains('Extra Components').click()
+    cy.contains('Drag & Drop').click()
+
+    cy.get('#todo-list div').first().trigger('dragstart')
+    cy.get('#drop-list').trigger('drop')
+
 })
