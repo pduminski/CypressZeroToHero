@@ -1,24 +1,35 @@
+/// <reference types="cypress"/>
+
+// create function that will check if menu item is expaned or collapsed
+function selectGroupMenuItem(groupItemName) {
+    cy.contains('a', groupItemName).invoke('attr', 'aria-expanded').then(attr => {
+        if (attr.includes('false')) {
+            cy.contains('a', groupItemName).click()
+        }
+    })
+}
+
+
 class NavigationPage {
 
     formLayoutsPage() {
-        cy.contains('Forms').click();
-        cy.contains('Form Layouts').click();
+        selectGroupMenuItem('Forms')
+        cy.contains('Form Layouts').click()
     }
 
     datePickerPage() {
-        cy.contains('Forms').click()
-        cy.wait(5000)
+        selectGroupMenuItem('Forms')
         cy.contains('Datepicker').click()
     }
 
     toastrPage() {
-        cy.contains('Modal & Overlays').click();
-        cy.contains("Toastr").click();
+        selectGroupMenuItem('Modal & Overlays')
+        cy.contains("Toastr").click()
     }
 
     tooltipPage() {
-        cy.contains('Modal & Overlays').click();
-        cy.contains("Tooltip").click();
+        selectGroupMenuItem('Modal & Overlays')
+        cy.contains("Tooltip").click()
     }
 }
 
